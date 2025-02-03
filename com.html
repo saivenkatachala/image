@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="background_removed (1).png">
+    <link rel="stylesheet" href="style2.css">
+    <title>Image Compressor</title>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">Image Editor</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="bg.html">Background Remover</a></li>
+            <li><a href="file.html">File Downloader</a></li>
+            <li><a href="com.html">Image Compressor</a></li>
+            <li><a href="re.html"> Image Crop & Resize</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <h2 class="section-title">Image Compressor</h2>
+            <form>
+                <input type="file" id="imageInput" accept="image/*">
+                <button type="button" onclick="compressImage()">Compress</button>
+            </form>
+            <canvas id="canvas"></canvas>
+            <div id="buttons-container">
+                <a id="downloadLink" style="display: none;" download="compressed_image.jpg">
+                    <button id="downloadBtn">Download</button>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        function compressImage() {
+            let input = document.getElementById('imageInput');
+            let file = input.files[0];
+
+            if (!file) {
+                alert('Please upload an image first.');
+                return;
+            }
+
+            let reader = new FileReader();
+            reader.onload = function (event) {
+                let img = new Image();
+                img.src = event.target.result;
+
+                img.onload = function () {
+                    let canvas = document.getElementById('canvas');
+                    let ctx = canvas.getContext('2d');
+
+                    let width = img.width / 2;
+                    let height = img.height / 2;
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    let compressedImage = canvas.toDataURL('image/jpeg', 0.5);
+
+                    let downloadLink = document.getElementById('downloadLink');
+                    downloadLink.href = compressedImage;
+                    downloadLink.style.display = 'block';
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="background_removed (1).png">
+    <link rel="stylesheet" href="style2.css">
+    <title>Image Editor</title>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">Image Editor</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#backgroundRemover">Background Remover</a></li>
+            <li><a href="file.html">File Downloader</a></li>
+            <li><a href="com.html">Image Compressor</a></li>
+            <li><a href="re.html"> Image Crop & Resize</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="container">
+            <h2>Image Crop & Resize</h2>
+            <form>
+                <input type="file" id="cropInput" accept="image/*">
+                <button type="button" onclick="cropImage()">Crop & Resize</button>
+            </form>
+            <canvas id="cropCanvas"></canvas>
+            <div id="buttons-container">
+                <a id="cropDownloadLink" style="display: none;" download="cropped_image.jpg">
+                    <button>Download Cropped Image</button>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function cropImage() {
+            let input = document.getElementById('cropInput');
+            let file = input.files[0];
+
+            if (!file) {
+                alert('Please upload an image first.');
+                return;
+            }
+
+            let reader = new FileReader();
+            reader.onload = function (event) {
+                let img = new Image();
+                img.src = event.target.result;
+
+                img.onload = function () {
+                    let canvas = document.getElementById('cropCanvas');
+                    let ctx = canvas.getContext('2d');
+
+                    let cropX = img.width * 0.2;
+                    let cropY = img.height * 0.2;
+                    let cropWidth = img.width * 0.6;
+                    let cropHeight = img.height * 0.6;
+
+                    canvas.width = cropWidth;
+                    canvas.height = cropHeight;
+
+                    ctx.drawImage(img, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+
+                    let croppedImage = canvas.toDataURL('image/jpeg', 0.8);
+
+                    let downloadLink = document.getElementById('cropDownloadLink');
+                    downloadLink.href = croppedImage;
+                    downloadLink.style.display = 'block';
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>
